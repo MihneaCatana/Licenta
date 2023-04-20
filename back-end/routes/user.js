@@ -1,17 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const DB = require("../config/db");
-const UserModel = require("../models/user");
+const userController = require("../controller").user;
 
-router.get("/", (req, res) => {
-  UserModel.findAll()
-    .then((users) => {
-      console.log(users);
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+router.get("/", userController.getAllUsers);
+
+router.post("/login", userController.userAuth);
 
 module.exports = router;

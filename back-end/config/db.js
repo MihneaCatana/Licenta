@@ -1,8 +1,8 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("licenta", "root", "", {
+const db_instance = new Sequelize("db_licenta", "root", "", {
   host: "localhost",
   dialect: "mysql",
 });
 
-module.exports = sequelize;
+module.exports = db_instance;

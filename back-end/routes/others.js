@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { db } = require("../models");
+const othersController = require("../controller").others;
 
-router.get("/reset", (req, res) => {
-  db.sequelize.sync({ force: true })
-    .then(() => res.status(201).send({message:"Database reset!"}))
-    .catch((err) => {
-      res
-        .status(500)
-        .send({ message: "Database reset failed!", err: err.message });
-    })
-});
+router.get("/reset", othersController.resetDB);
 
 module.exports = router;
