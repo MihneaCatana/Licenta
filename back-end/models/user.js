@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
-    idDepartament: {
+    idDepartment: {
       type: DataTypes.INTEGER,
     },
     idStatus: {
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     activeAccount: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   });
 };

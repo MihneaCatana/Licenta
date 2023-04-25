@@ -12,6 +12,7 @@ const controller = {
           email: "admin@gmail.com",
           password: "1234567",
           idStatus: 3,
+          activeAccount: true,
         });
 
         res.status(201).send({ message: "Database reset!" });
