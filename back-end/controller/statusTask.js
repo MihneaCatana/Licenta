@@ -1,8 +1,8 @@
-const statusUserDb = require("../models").StatusUser;
+const statusTaskDb = require("../models").StatusTask;
 
 const controller = {
   getAllStatuts: async (req, res) => {
-    await statusUserDb
+    await statusTaskDb
       .findAll()
       .then((statuses) => {
         res.status(200).send(statuses);
@@ -15,7 +15,7 @@ const controller = {
 
   getStatusById: async (req, res) => {
     try {
-      const status = await statusUserDb.findOne({
+      const status = await statusTaskDb.findOne({
         where: { id: req.params.id },
       });
 
@@ -31,7 +31,7 @@ const controller = {
   },
 
   createStatus: async (req, res) => {
-    const existentStatus = await statusUserDb.findOne({
+    const existentStatus = await statusTaskDb.findOne({
       where: { name: req.body.name },
     });
 
@@ -45,7 +45,7 @@ const controller = {
       return;
     }
     try {
-      const status = await statusUserDb.create({
+      const status = await statusTaskDb.create({
         name: req.body.name,
       });
       res.status(200).send(status);
@@ -56,7 +56,7 @@ const controller = {
 
   updateStatusById: async (req, res) => {
     try {
-      const status = await statusUserDb.findOne({
+      const status = await statusTaskDb.findOne({
         where: { id: req.params.id },
       });
 
@@ -78,7 +78,7 @@ const controller = {
   },
 
   deleteStatus: async (req, res) => {
-    const status = await statusUserDb.findOne({
+    const status = await statusTaskDb.findOne({
       where: { id: req.params.id },
     });
 

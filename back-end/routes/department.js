@@ -10,6 +10,6 @@ router.get("/:id", departmentController.getDepartmentById);
 
 router.put("/:id", departmentController.updateDepartmentById);
 
-router.delete("/delete/:id", departmentController.deleteDeparment);
+router.delete("/:id", departmentController.deleteDeparment);
 
 module.exports = router;

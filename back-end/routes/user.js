@@ -16,6 +16,6 @@ router.put("/activate/:id", userController.activateUserById);
 
 router.put("/deactivate/:id", userController.deactivateUserById);
 
-router.delete("/delete/:id", userController.deleteUser);
+router.delete("/:id", userController.deleteUser);
 
 module.exports = router;
