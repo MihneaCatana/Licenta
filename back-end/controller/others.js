@@ -82,6 +82,7 @@ const controller = {
           email: "admin@gmail.com",
           password: "1234567",
           idStatus: 3,
+          idDepartment: 4,
           activeAccount: true,
         });
 
@@ -107,7 +108,7 @@ const controller = {
           name: "Search for parteners",
           description: "Contact at least 10 partners",
           idStatus: 3,
-          idUser: 3,
+          idUser: 2,
           deadline: new Date("2015-08-12T12:00"),
         });
 
