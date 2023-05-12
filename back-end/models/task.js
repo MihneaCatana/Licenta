@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 1,
     },
+    idProject: {
+      type: DataTypes.INTEGER,
+    },
     deadline: {
       type: DataTypes.DATE,
     },

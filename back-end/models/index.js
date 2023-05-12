@@ -8,6 +8,7 @@ const StatusUserModel = require("./statusUser");
 const StatusTaskModel = require("./statusTask");
 const TaskModel = require("./task");
 const CommentModel = require("./comment");
+const ProjectModel = require("./project");
 
 const User = UserModel(sequelize, Sequelize);
 const Department = DepartmentModel(sequelize, Sequelize);
@@ -15,6 +16,7 @@ const StatusUser = StatusUserModel(sequelize, Sequelize);
 const StatusTask = StatusTaskModel(sequelize, Sequelize);
 const Task = TaskModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
+const Project = ProjectModel(sequelize, Sequelize);
 
 Department.hasMany(User, { foreignKey: "idDepartment" });
 User.belongsTo(Department, { foreignKey: "idDepartment" });
@@ -34,6 +36,9 @@ Comment.belongsTo(Task, { foreignKey: "idTask" });
 StatusTask.hasMany(Task, { foreignKey: "idStatusTask" });
 Task.belongsTo(StatusTask, { foreignKey: "idStatusTask" });
 
+Project.hasMany(Task, { foreignKey: "idProject" });
+Task.belongsTo(Project, { foreignKey: "idProject" });
+
 module.exports = {
   User,
   Department,
@@ -41,5 +46,6 @@ module.exports = {
   StatusTask,
   Task,
   Comment,
+  Project,
   connection: sequelize,
 };

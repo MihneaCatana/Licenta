@@ -73,6 +73,10 @@ const controller = {
           task.idUser = req.body.idUser;
         }
 
+        if (req.body.idProject) {
+          task.idProject = req.body.idProject;
+        }
+
         await task.save();
 
         res.status(200).send(task);
@@ -87,21 +91,24 @@ const controller = {
 
   assignTask: async (req, res) => {
     try {
-      const task = TaskDb.findOne({
-        where: { id: req.params.idTask },
+      const user = await UserDb.findOne({
+        where: { id: req.body.idUser },
       });
 
-      const user = UserDb.findOne({
-        where: { id: req.params.idUser },
+      const task = await TaskDb.findOne({
+        where: { id: req.params.id },
       });
 
       if (task) {
-        if (user && user.idStatus == 1) {
-          task.idUser = req.params.idUser;
-          task.idStatusTask = 2;
+        if (user && (user.idStatus == 1 || user.idStatus == 2)) {
+          task.idUser = req.body.idUser;
           task.deadline = req.body.deadline;
+          task.idStatusTask = 2;
+
+          if (req.body.idProject) task.idProject = req.body.idProject;
 
           await task.save();
+          res.status(200).send(task);
         } else {
           res.status(404).send({ message: "User doesn't exist!" });
         }
@@ -109,7 +116,10 @@ const controller = {
         res.status(404).send({ message: "Task doesn't exist!" });
         return;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Server error!" });
+    }
   },
 
   deleteTask: async (req, res) => {
@@ -120,7 +130,7 @@ const controller = {
     if (task) {
       await task.destroy();
       res.status(200).send({
-        message: `Department with id ${req.params.id} was destroyed! `,
+        message: `Task with id ${req.params.id} was destroyed! `,
       });
     } else {
       res.status(404).send({ message: " Task was not found ! " });

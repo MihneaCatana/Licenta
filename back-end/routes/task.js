@@ -10,7 +10,7 @@ router.get("/:id", TaskController.getTaskById);
 
 router.put("/:id", TaskController.updateTaskById);
 
-router.put("assign/:idTask/:idUser", TaskController.assignTask);
+router.put("/assign/:id", TaskController.assignTask);
 
 router.delete("/:id", TaskController.deleteTask);
 

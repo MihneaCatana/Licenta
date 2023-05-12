@@ -5,6 +5,7 @@ const statusUser = require("./statusUser");
 const statusTask = require("./statusTask");
 const task = require("./task");
 const comment = require("./comment");
+const project = require("./project");
 
 const controller = {
   others,
@@ -14,6 +15,7 @@ const controller = {
   statusTask,
   task,
   comment,
+  project,
 };
 
 module.exports = controller;
