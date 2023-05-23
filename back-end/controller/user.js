@@ -5,10 +5,12 @@ const controller = {
     const { email, password } = req.body;
 
     try {
-      const user = await UserDb.findOne({ email: email, password: password });
+      const user = await UserDb.findOne({
+        where: { email: email, password: password },
+      });
 
       if (user) {
-        res.status(200).send({ message: "Autentificare realizata cu succes!" });
+        res.status(200).send(user);
       } else {
         res.status(404).send({ message: "Credentiale gresite!" });
       }
