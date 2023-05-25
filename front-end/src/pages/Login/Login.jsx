@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
 
-export function Login() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -64,7 +64,7 @@ export function Login() {
         password: password,
       })
         .then((response) => {
-          console.log(response);
+          localStorage.setItem("myAccount", JSON.stringify(response));
           navigate("/homepage");
         })
         .catch(() => {

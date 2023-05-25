@@ -1,0 +1,14 @@
+.navbar{
+    font-family: 'Montserrat', sans-serif !important;
+    
+}
+
+.navbar_icon:hover{
+    cursor: pointer;
+}
+
+.navbar_links{
+    display: flex;
+}
+
+

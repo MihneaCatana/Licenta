@@ -1,10 +1,10 @@
 import Appbar from "../../components/Appbar/Appbar";
 
-export default function Homepage() {
+export default function Profile() {
   return (
     <>
       <Appbar />
-      <h1>This is homepage</h1>
+      <h1>PROFILE</h1>
     </>
   );
 }

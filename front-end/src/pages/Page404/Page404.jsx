@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import "./page404.css";
 
-export const Page404 = () => {
+export default function Page404() {
   const navigate = useNavigate();
 
   return (
@@ -18,4 +18,4 @@ export const Page404 = () => {
       </Button>
     </div>
   );
-};
+}
