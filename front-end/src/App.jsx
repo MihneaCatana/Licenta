@@ -4,13 +4,14 @@ import {
   Routes,
   Route,
   Navigate,
-  Outlet,
+  Outlet, useParams,
 } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Homepage from "./pages/Homepage/Homepage";
 import Page404 from "./pages/Page404/Page404";
 import Profile from "./pages/Profile/Profile";
 import MyTasks from "./pages/MyTasks/MyTasks";
+import SingleTask from "./pages/SingleTask/SingleTask";
 
 function App() {
   const isAuthenticated = () => {
@@ -39,6 +40,9 @@ function App() {
         </Route>
         <Route path="/mytasks" element={<PrivateRoute path="/login" />}>
           <Route path="/mytasks" element={<MyTasks />} />
+        </Route>
+        <Route path="/task/:taskId" element={<PrivateRoute path="/login" />}>
+          <Route path="/task/:taskId" element={<SingleTask id={useParams()} />} />
         </Route>
         <Route path="*" element={<Page404 />} />
         <Route path="/" element={<Navigate to="/login" />} />

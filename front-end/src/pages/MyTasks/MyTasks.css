@@ -1,0 +1,15 @@
+.mytasks_title{
+    text-align: center;
+    margin: 1.7rem;
+    font-size: 1.6rem;
+}
+
+.mytasks_dataGrid{
+    width: 92%;
+
+}
+
+.mytasks_container_dataGrid{
+    display:flex;
+    justify-content: center;
+}

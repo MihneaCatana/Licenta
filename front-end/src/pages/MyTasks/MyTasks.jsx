@@ -3,14 +3,19 @@ import { DataGrid } from '@mui/x-data-grid';
 import {useState, useEffect} from "react";
 import Button from '@mui/material/Button';
 import Axios from "axios"
-export default function MyTasks() {
+import {useNavigate} from "react-router-dom";
+import "./MyTasks.css"
 
-	const account = JSON.parse(localStorage.getItem("myAccount"))
-	const idAccount = account.data.id;
+export default function MyTasks() {
 
 	const [tasks,setTasks] = useState([])
 	const [columns,setColumns] = useState([])
 	const [selectedRow, setSelectedRow] = useState({})
+
+	const account = JSON.parse(localStorage.getItem("myAccount"))
+	const idAccount = account.data.id;
+
+	const navigate = useNavigate();
 
 	useEffect(()=>{
 		Axios.get("http://localhost:8085/task/user/"+idAccount).then((response) =>{
@@ -22,12 +27,11 @@ export default function MyTasks() {
 
 	const selectRow = (selectedRow) =>{
 		setSelectedRow(selectedRow.row)
-		console.log(selectedRow.row)
 	}
 
 	const renderButtonCell = (params) =>{
 		return (
-			<Button variant="contained" onClick={() => selectRow(params)}>View</Button>
+			<Button variant="contained" onClick={() => {navigate("/task/"+params.row.id)}}>View</Button>
 		);
 	}
 
@@ -40,11 +44,16 @@ export default function MyTasks() {
 	return (
 		<>
 			<Appbar/>
-			 My Tasks
-			{columns.length > 0 && (
-				<DataGrid columns={columnsWithButton}  rows={tasks}/>
-			)}
+			 <p className="mytasks_title">My Tasks</p>
 
+			<div className="mytasks_container_dataGrid">
+				<div className="mytasks_dataGrid">
+					{columnsWithButton.length>0 ?
+						<DataGrid columns={columnsWithButton}  rows={tasks} onRowClick={(row)=>{selectRow(row)}}/>
+					: <> You don't have assigned tasks! </>
+					}
+				</div>
+			</div>
 
 		</>
 	)
