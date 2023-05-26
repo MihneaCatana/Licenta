@@ -22,6 +22,10 @@ export default function Appbar() {
     setAnchorEl(null);
   };
 
+  const mytasks = () =>{
+    navigate("/mytasks")
+  }
+
   const profile = () => {
     navigate("/profile");
   };
@@ -76,7 +80,7 @@ export default function Appbar() {
               }}
             >
               <MenuItem onClick={profile}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={mytasks}>My tasks</MenuItem>
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </div>

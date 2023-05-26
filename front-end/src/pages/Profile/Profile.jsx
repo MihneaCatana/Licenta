@@ -1,10 +1,40 @@
-import Appbar from "../../components/Appbar/Appbar";
+import Appbar from "../../components/Appbar/Appbar"
+import employee from "../../assets/employee.png"
+import "./Profile.css"
+import {Avatar} from "@mui/material";
+import {useEffect, useState} from "react";
+import Axios from "axios";
 
 export default function Profile() {
+    const account = JSON.parse(localStorage.getItem("myAccount"))
+
+    const [department,setDepartment] =useState("");
+    const [statusUser,setStatusUser] = useState("");
+
+    useEffect(()=>{
+       Axios.get("http://localhost:8085/department/"+account.data.idDepartment).then((response)=>{
+           setDepartment(response.data.name)
+       })
+        Axios.get("http://localhost:8085/statusUser/"+account.data.idStatus).then((response)=>{
+            setStatusUser(response.data.name)
+        })
+
+    },[])
+
+
   return (
     <>
       <Appbar />
-      <h1>PROFILE</h1>
+      <div className="profile_layout">
+            <div className="profile_card">
+                <Avatar alt="Travis Howard" src={employee} sx={{ width: 74, height: 74, marginTop:1 }} />
+                <div className="account_details">
+                <p> <b>Email:</b> {account.data.email}</p>
+                <p> <b>Department:</b> {department}</p>
+                <p> <b>Status:</b> {statusUser}</p>
+                </div>
+            </div>
+      </div>
     </>
   );
 }

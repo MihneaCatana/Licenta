@@ -30,6 +30,24 @@ const controller = {
     }
   },
 
+  getTaskByIdUser : async (req,res) =>{
+    try{
+      const tasks = await TaskDb.findAll({
+        where: {idUser: req.params.idUser},
+      });
+
+      if(tasks) {
+        res.status(200).send(tasks);
+      } else {
+        res.status(404).send({ message:" No tasks! "})
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Server error!" });
+    }
+  },
+
   createTask: async (req, res) => {
     try {
       const task = await TaskDb.create({
