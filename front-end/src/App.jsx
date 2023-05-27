@@ -12,6 +12,8 @@ import Page404 from "./pages/Page404/Page404";
 import Profile from "./pages/Profile/Profile";
 import MyTasks from "./pages/MyTasks/MyTasks";
 import SingleTask from "./pages/SingleTask/SingleTask";
+import ManagementPanel from "./pages/ManagementPanel/ManagementPanel";
+import Users from "./pages/Users/Users"
 
 function App() {
   const isAuthenticated = () => {
@@ -43,6 +45,12 @@ function App() {
         </Route>
         <Route path="/task/:taskId" element={<PrivateRoute path="/login" />}>
           <Route path="/task/:taskId" element={<SingleTask id={useParams()} />} />
+        </Route>
+        <Route path="/management" element={<PrivateRoute path="/login" />}>
+          <Route path="/management" element={<ManagementPanel />} />
+        </Route>
+        <Route path="/users" element={<PrivateRoute path="/login" />}>
+          <Route path="/users" element={<Users />} />
         </Route>
         <Route path="*" element={<Page404 />} />
         <Route path="/" element={<Navigate to="/login" />} />

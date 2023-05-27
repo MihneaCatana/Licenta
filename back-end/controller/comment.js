@@ -29,7 +29,24 @@ const controller = {
     }
   },
 
-  //  TO DO
+  getCommentByTaskId: async (req,res) =>{
+    try{
+      const comments = await CommentDb.findAll({
+        where: {idTask: req.params.idTask}
+      })
+
+      if(comments) {
+        res.status(200).send(comments);
+      } else {
+        res.status(404).send({message:"Comments not found!"})
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Server error!" });
+    }
+  },
 
   createComment: async (req, res) => {
     try {

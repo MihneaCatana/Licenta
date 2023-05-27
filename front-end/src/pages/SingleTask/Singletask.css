@@ -36,7 +36,7 @@
 .task_comment_zone{
     width: 25vw;
     height: 75vh;
-    margin-left:1rem;
+    margin-left:2.8rem;
     box-shadow: 1px 1px 15px 8px rgba(161,161,161,0.35);
     display: flex;
     flex-direction: column;
@@ -54,4 +54,18 @@
     cursor: pointer;
     transform: scale(140%) ;
     transition: 1.2s;
+}
+
+.task_returnButton{
+    display:flex;
+    justify-content: center;
+    margin-top:1.2rem
+}
+
+@media screen and ( max-width: 768px){
+    .task_comment_zone{
+        width: 90vw;
+        margin-top: 1rem;
+        margin-left: 0;
+    }
 }

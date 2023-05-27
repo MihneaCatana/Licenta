@@ -30,6 +30,10 @@ export default function Appbar() {
     navigate("/profile");
   };
 
+  const managementPanel = () => {
+    navigate("/management");
+  };
+
   const logout = () => {
     navigate("/login");
     localStorage.clear();
@@ -81,6 +85,7 @@ export default function Appbar() {
             >
               <MenuItem onClick={profile}>Profile</MenuItem>
               <MenuItem onClick={mytasks}>My tasks</MenuItem>
+              <MenuItem onClick={managementPanel}>Management Panel</MenuItem>
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </div>
