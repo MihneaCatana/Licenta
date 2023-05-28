@@ -1,4 +1,6 @@
 const UserDb = require("../models").User;
+const bcrypt = require('bcrypt')
+const {response} = require("express");
 
 const controller = {
   userAuth: async (req, res) => {
@@ -6,19 +8,33 @@ const controller = {
 
     try {
       const user = await UserDb.findOne({
-        where: { email: email, password: password },
+        where: { email: email },
       });
 
       if (user) {
-        res.status(200).send(user);
+        const result = await new Promise((resolve, reject) => {
+          bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          });
+        });
+
+        if(result) {
+          res.status(200).send(user);
+        } else {
+          res.status(404).send({message: "Wrong Credentials!"})
+        }
+
       } else {
-        res.status(404).send({ message: "Credentiale gresite!" });
+        res.status(404).send({message: "Wrong Credentials!"})
       }
-    } catch (error) {
+    }catch (error) {
       console.log(error);
       res.status(500).send({ message: "Server error!" });
-    }
-  },
+  }},
 
   getAllUsers: async (req, res) => {
     await UserDb.findAll()
@@ -61,9 +77,11 @@ const controller = {
       return;
     }
     try {
+
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const user = await UserDb.create({
         email: req.body.email,
-        password: req.body.password,
+        password: hashedPassword,
         idDepartment: req.body.idDepartment,
         idStatus: req.body.idStatus,
       });
@@ -121,7 +139,8 @@ const controller = {
         }
 
         if (password && password.length > 6) {
-          user.password = password;
+          const hashedPassword = await bcrypt.hash(password, 10);
+          user.password = hashedPassword;
         }
 
         if (idDepartment) {

@@ -117,7 +117,7 @@ export default function SingleTask(callbackfn, thisArg) {
 	const confirmFinishingTask = () =>{
 		Axios.put("http://localhost:8085/task/"+taskId, {
 			finishedTime: new Date(),
-			idStatusTask: 5
+			idStatusTask: 4
 		})
 		setOpen(false);
 		window.location.reload(false);
