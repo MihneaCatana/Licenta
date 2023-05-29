@@ -8,6 +8,8 @@ router.get("/", departmentController.getAllDepartments);
 
 router.get("/:id", departmentController.getDepartmentById);
 
+router.get("/name/:name", departmentController.getDepartmentByName)
+
 router.put("/:id", departmentController.updateDepartmentById);
 
 router.delete("/:id", departmentController.deleteDeparment);

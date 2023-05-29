@@ -1,28 +1,29 @@
-.management_panel_title{
+.management_panel_title {
     text-align: center;
-    font-size:2rem;
-    margin:1.9rem;
+    font-size: 2rem;
+    margin: 1.9rem;
 }
 
-.management_card{
+.management_card {
     height: 450px;
     width: 350px;
-    box-shadow: 1px 1px 15px 8px rgba(161,161,161,0.35);
+    box-shadow: 1px 1px 15px 8px rgba(161, 161, 161, 0.35);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin: 1.3rem 0;
 }
 
-.management_card:hover{
+.management_card:hover {
     transition: 0.3s;
     transform: scale(110%);
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.management_cards_container{
-    display:flex;
+.management_cards_container {
+    display: flex;
     justify-content: space-evenly;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
 }

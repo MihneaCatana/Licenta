@@ -1,9 +1,20 @@
-import Appbar from "../../components/Appbar/Appbar";
-import { DataGrid } from '@mui/x-data-grid';
+//HOOKS
 import {useState, useEffect} from "react";
-import Button from '@mui/material/Button';
-import Axios from "axios"
+
+// ROUTING
 import {useNavigate} from "react-router-dom";
+
+// USER MADE COMPONENTS
+import Appbar from "../../components/Appbar/Appbar";
+
+//MATERIAL UI
+import Button from '@mui/material/Button';
+import { DataGrid } from '@mui/x-data-grid';
+
+//AXIOS
+import Axios from "axios"
+
+// CSS
 import "./MyTasks.css"
 
 export default function MyTasks() {
@@ -44,7 +55,9 @@ export default function MyTasks() {
 	return (
 		<>
 			<Appbar/>
-			 <p className="mytasks_title">My Tasks</p>
+			<div className="management_panel_title">
+				My Tasks
+			</div>
 
 			<div className="mytasks_container_dataGrid">
 				<div className="mytasks_dataGrid">

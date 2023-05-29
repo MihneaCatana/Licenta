@@ -1,0 +1,5 @@
+.users_buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.3rem;
+}
