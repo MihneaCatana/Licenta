@@ -39,7 +39,7 @@ export default function Profile() {
             <Appbar/>
 
             <div className="profile_layout">
-                <div className="management_panel_title">
+                <div className="panel_title">
                     Profile
                 </div>
                 <div className="profile_card">

@@ -156,7 +156,7 @@ export default function Projects() {
         <>
             <ToastContainer/>
             <Appbar/>
-            <div className="management_panel_title">
+            <div className="panel_title">
                 Projects
             </div>
             <div className="mytasks_container_dataGrid">

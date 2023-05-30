@@ -6,10 +6,10 @@ import Appbar from "../../components/Appbar/Appbar";
 
 // TOAST
 import "react-toastify/dist/ReactToastify.css";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 // MATERIAL UI
-import {DataGrid} from "@mui/x-data-grid";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -37,7 +37,7 @@ export default function Tasks() {
     const [selectedTaskId, setSelectedTaskId] = useState(0);
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [deadline, setDeadline] = useState(dayjs(''));
+    const [deadline, setDeadline] = useState(dayjs(null));
 
     const [statusTasks, setStatusTasks] = useState([])
     const [projects, setProjects] = useState([])
@@ -47,9 +47,7 @@ export default function Tasks() {
     const [selectedProject, setSelectedProject] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null)
 
-    const [idProject, setIdProject] = useState(0)
     const [idStatusTask, setIdStatusTask] = useState(0)
-    const [idUser, setIdUser] = useState(0)
 
     useEffect(() => {
         Axios.get("http://localhost:8085/task").then((response) => {
@@ -59,6 +57,7 @@ export default function Tasks() {
 
         Axios.get("http://localhost:8085/statusTask").then((response) => {
             setStatusTasks(Array.from(response.data))
+
         })
 
         Axios.get("http://localhost:8085/project").then((response) => {
@@ -82,6 +81,11 @@ export default function Tasks() {
 
         //reset to default values
         setName("")
+        setDescription("")
+        setSelectedStatusTask(null);
+        setSelectedUser(null);
+        setSelectedProject(null);
+        setDeadline(dayjs(''));
     }
     const handleClose = () => setOpen(false);
 
@@ -110,7 +114,10 @@ export default function Tasks() {
                     setEditMode(true);
                     setName(params.row.name)
                     setDescription(params.row.description)
-
+                    setSelectedProject(projects.find((project) => project.id === params.row.idProject))
+                    setSelectedStatusTask(statusTasks.find((statusTask) => statusTask.id === params.row.idStatusTask))
+                    setSelectedUser(users.find((user) => user.id === params.row.idUser))
+                    setDeadline(dayjs(params.row.deadline))
                     setOpen(true);
                 }}
                 sx={{marginLeft: 1, backgroundColor: 'transparent', color: 'black', padding: '6px'}}
@@ -138,14 +145,92 @@ export default function Tasks() {
 
     const addTask = () => {
 
+        if (idStatusTask === 0) {
+            setIdStatusTask(1);
+        }
+
+        if (name.length === 0) {
+            toast.error("Name must be completed!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+            });
+        } else if (!deadline || isNaN(deadline.unix())) {
+            toast.error("Deadline must be completed!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+            });
+        } else {
+
+            Axios.post("http://localhost:8085/task/create", {
+                name: name,
+                description: description,
+                idStatusTask: idStatusTask,
+                idProject: selectedProject.id,
+                deadline: deadline.format("YYYY-MM-DDTHH:mm"),
+                idUser: selectedUser ? selectedUser.id : null
+            })
+            window.location.reload(false);
+
+        }
     }
 
     const editTask = async () => {
+        if (idStatusTask === 0) {
+            setIdStatusTask(1);
+        }
 
+        if (name.length === 0) {
+            toast.error("Name must be completed!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+            });
+        } else if (!deadline || isNaN(deadline.unix())) {
+            toast.error("Deadline must be completed!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+            });
+        } else {
+
+            Axios.put("http://localhost:8085/task/" + selectedTaskId, {
+                name: name,
+                description: description,
+                idStatusTask: idStatusTask,
+                idProject: selectedProject.id,
+                deadline: deadline.format("YYYY-MM-DDTHH:mm"),
+                idUser: selectedUser.id
+            })
+            window.location.reload(false);
+
+        }
     }
 
     const deleteTask = () => {
-        Axios.delete("http://localhost:8085/task" + selectedTaskId);
+
+        Axios.delete("http://localhost:8085/task/" + selectedTaskId);
         window.location.reload(false);
     }
 
@@ -153,14 +238,14 @@ export default function Tasks() {
         <>
             <ToastContainer/>
             <Appbar/>
-            <div className="management_panel_title">
+            <div className="panel_title">
                 Tasks
             </div>
             <div className="mytasks_container_dataGrid">
                 <div className="mytasks_dataGrid">
                     {columns.length > 0 ?
 
-                        <DataGrid columns={columnsWithButton} rows={tasks}
+                        <DataGrid columns={columnsWithButton} rows={tasks} slots={{toolbar: GridToolbar}}
                         />
                         : <></>}
 
@@ -224,7 +309,6 @@ export default function Tasks() {
                             sx={{width: 300}}
                             value={selectedProject}
                             onChange={(event, value) => {
-                                setIdProject(value.id)
                                 setSelectedProject(value)
                             }}
                             renderInput={(params) => <TextField {...params} label="Projects"/>}
@@ -256,7 +340,7 @@ export default function Tasks() {
                             sx={{width: 300}}
                             value={selectedUser}
                             onChange={(event, value) => {
-                                setIdUser(value.id)
+
                                 setSelectedUser(value)
                             }}
                             renderInput={(params) => <TextField {...params} label="User"/>}
@@ -266,10 +350,7 @@ export default function Tasks() {
                     <StaticDateTimePicker defaultValue={dayjs('2023-07-17T15:30')} orientation="landscape" disablePast
                                           ampm={false}
                                           value={deadline} onChange={(value) => {
-                        console.log(value)
-                        console.log(new Date(value))
                         setDeadline(value)
-
                     }}
                     />
 

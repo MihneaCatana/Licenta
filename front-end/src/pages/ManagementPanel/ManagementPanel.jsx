@@ -37,7 +37,7 @@ export default function ManagementPanel() {
     return (
         <>
             <Appbar/>
-            <div className="management_panel_title">
+            <div className="panel_title">
                 Management Panel
             </div>
             <div className="management_cards_container">

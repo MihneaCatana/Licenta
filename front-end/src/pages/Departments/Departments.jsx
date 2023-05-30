@@ -157,7 +157,7 @@ export default function Departments() {
         <>
             <ToastContainer/>
             <Appbar/>
-            <div className="management_panel_title">
+            <div className="panel_title">
                 Departments
             </div>
             <div className="mytasks_container_dataGrid">

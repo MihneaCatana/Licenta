@@ -6,7 +6,7 @@ import Appbar from "../../components/Appbar/Appbar";
 
 //MATERIAL UI
 import Button from '@mui/material/Button';
-import {DataGrid} from '@mui/x-data-grid';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import {Autocomplete} from "@mui/material";
@@ -291,7 +291,7 @@ export default function Users() {
         <>
             <ToastContainer/>
             <Appbar/>
-            <div className="management_panel_title">
+            <div className="panel_title">
                 Users
             </div>
             <div className="mytasks_container_dataGrid">
@@ -299,7 +299,7 @@ export default function Users() {
                     {columns.length > 0 ?
 
                         <DataGrid columns={columnsWithButton} rows={users}
-                                  columnVisibilityModel={{password: false}}/>
+                                  columnVisibilityModel={{password: false}} slots={{toolbar: GridToolbar}}/>
                         : <></>}
 
                 </div>

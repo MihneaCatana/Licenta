@@ -61,7 +61,7 @@ export default function SingleTask(callbackfn, thisArg) {
 
             const idProject = response.data.idProject;
             if (idProject) {
-                Axios.get("http://localhost:8085/task/" + idProject)
+                Axios.get("http://localhost:8085/project/" + idProject)
                     .then((response) => {
                         setProject(response.data);
                     })
