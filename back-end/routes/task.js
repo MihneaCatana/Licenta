@@ -8,7 +8,11 @@ router.get("/", TaskController.getAllTasks);
 
 router.get("/:id", TaskController.getTaskById);
 
-router.get("/user/:idUser",TaskController.getTaskByIdUser);
+router.get("/department/:idDepartment", TaskController.getTaskByIdDepartment)
+
+router.get("/project/:idProject", TaskController.getTaskByIdProject)
+
+router.get("/user/:idUser", TaskController.getTaskByIdUser);
 
 router.put("/:id", TaskController.updateTaskById);
 

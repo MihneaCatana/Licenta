@@ -30,6 +30,58 @@ const controller = {
         }
     },
 
+    getTaskByIdDepartment: async (req, res) => {
+        try {
+            const users = await UserDb.findAll({where: {idDepartment: req.params.idDepartment}})
+
+            let arrayTasks = [];
+            if (users) {
+
+
+                await Promise.all(users.map(async (user) => {
+                    const tasks = await TaskDb.findAll({where: {idUser: user.id}})
+                    arrayTasks.push(tasks)
+                }));
+
+                let finalArray = []
+                for (const task of arrayTasks) {
+
+                    if (task.length >= 1) {
+
+                        for (const miniTask of task) {
+                            finalArray.push(miniTask)
+                        }
+                    }
+                }
+                
+                res.status(200).send(finalArray)
+            } else {
+
+                res.status(200).send(null)
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(200).send({message: "Department not found!"})
+        }
+    },
+
+    getTaskByIdProject: async (req, res) => {
+        try {
+            const tasks = await TaskDb.findAll({where: {idProject: req.params.idProject}})
+
+            if (tasks) {
+                res.status(200).send(tasks)
+            } else {
+                res.status(200).send(null);
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(200).send({message: "Server error!"})
+        }
+    },
+
     getTaskByIdUser: async (req, res) => {
         try {
             const tasks = await TaskDb.findAll({

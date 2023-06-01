@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 
 // USER MADE COMPONENTS
 import Appbar from "../../components/Appbar/Appbar";
+import PieChart from "../../components/PieChart/PieChart";
 
 // TOAST
 import "react-toastify/dist/ReactToastify.css";
@@ -70,6 +71,8 @@ export default function Tasks() {
 
     }, [])
 
+    const finishedTasks = tasks.filter((element) => element.finishedTime)
+    const unfinishedTasks = tasks.filter((element) => !element.finishedTime)
 
     const handleCloseConfirmation = () => {
         setOpenConfirmation(false)
@@ -254,6 +257,16 @@ export default function Tasks() {
             <div className="users_buttons">
                 <Button variant="contained" onClick={openAddModal}>Add Task</Button>
             </div>
+            <div className="taskstats">
+                <div className="card_homepage">
+                    <div className="panel_title">
+                        Status of the tasks
+                    </div>
+                    {unfinishedTasks.length > 0 || finishedTasks.length > 0 ?
+                        <PieChart data1={finishedTasks} data2={unfinishedTasks}/> : <></>}
+                </div>
+            </div>
+
 
             {/*Confirmation dialog for Delete*/}
             <Dialog

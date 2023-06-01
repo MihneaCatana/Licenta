@@ -22,14 +22,18 @@ import TextField from "@mui/material/TextField";
 
 // AXIOS
 import Axios from "axios";
+import PieChart from "../../components/PieChart/PieChart";
 
 export default function Projects() {
 
     const [projects, setProjects] = useState([]);
     const [columns, setColumns] = useState([])
+    const [tasks, setTasks] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [selectedDepartmentId, setSelectedProjectId] = useState(0);
     const [name, setName] = useState("")
+    const [selectedRow, setSelectedRow] = useState();
+
 
     useEffect(() => {
         Axios.get("http://localhost:8085/project").then((response) => {
@@ -37,7 +41,11 @@ export default function Projects() {
             setColumns(Object.keys(response.data[0]))
         })
 
+
     }, [])
+
+    const finishedTasks = tasks.filter((element) => element.finishedTime)
+    const unfinishedTasks = tasks.filter((element) => !element.finishedTime)
 
     const handleCloseConfirmation = () => {
         setOpenConfirmation(false)
@@ -163,7 +171,12 @@ export default function Projects() {
                 <div className="mytasks_dataGrid">
                     {columns.length > 0 ?
 
-                        <DataGrid columns={columnsWithButton} rows={projects}
+                        <DataGrid columns={columnsWithButton} rows={projects} onRowClick={(row) => {
+                            setSelectedRow(row.id);
+                            Axios.get("http://localhost:8085/task/project/" + row.id).then((response) => {
+                                setTasks(response.data)
+                            })
+                        }}
                         />
                         : <></>}
 
@@ -172,6 +185,21 @@ export default function Projects() {
             <div className="users_buttons">
                 <Button variant="contained" onClick={openAddModal}>Add Project</Button>
             </div>
+
+            {selectedRow > 0 ?
+                <div>
+                    <div className="taskstats">
+                        <div className="card_homepage">
+                            <div className="panel_title">
+                                Status of the tasks
+                            </div>
+
+                            {unfinishedTasks.length > 0 || finishedTasks.length > 0 ?
+                                <PieChart data1={finishedTasks} data2={unfinishedTasks}/> : <></>}
+                        </div>
+                    </div>
+                </div> : <></>}
+
 
             {/*Confirmation dialog for Delete*/}
             <Dialog
