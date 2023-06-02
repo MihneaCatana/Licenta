@@ -30,6 +30,16 @@ function App() {
         return auth ? <Outlet/> : <Navigate to={path}/>;
     };
 
+    const AdministrationRoute = ({path}) => {
+        const account = JSON.parse(localStorage.getItem("myAccount"));
+        const auth = isAuthenticated();
+        if ((account.data.idStatus === 2 || account.data.idStatus === 3) && auth) {
+            return <Outlet/>
+        } else {
+            return auth ? <Navigate to="/homepage"/> : <Navigate to={path}/>;
+        }
+    }
+
     const theme = createTheme({
         "palette": {
             "common": {
@@ -87,7 +97,7 @@ function App() {
                         <Route path="/task/:taskId" element={<PrivateRoute path="/login"/>}>
                             <Route path="/task/:taskId" element={<SingleTask id={useParams()}/>}/>
                         </Route>
-                        <Route path="/management" element={<PrivateRoute path="/login"/>}>
+                        <Route path="/management" element={<AdministrationRoute path="/login"/>}>
                             <Route path="/management" element={<ManagementPanel/>}/>
                         </Route>
                         <Route path="/users" element={<PrivateRoute path="/login"/>}>

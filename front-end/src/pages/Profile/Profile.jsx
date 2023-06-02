@@ -43,7 +43,7 @@ export default function Profile() {
                     Profile
                 </div>
                 <div className="profile_card">
-                    <Avatar alt="Travis Howard" src={employee} sx={{width: 74, height: 74, marginTop: 1}}/>
+                    <Avatar alt="Employee" src={employee} sx={{width: 74, height: 74, marginTop: 1}}/>
                     <div className="account_details">
                         <p><b>Email:</b> {account.data.email}</p>
                         <p><b>Department:</b> {department}</p>

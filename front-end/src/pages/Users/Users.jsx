@@ -16,6 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import AddIcon from '@mui/icons-material/Add';
 
 // TOAST
 import {toast, ToastContainer} from "react-toastify";
@@ -39,9 +40,13 @@ export default function Users() {
     const [idDepartment, setIdDepartment] = useState(0)
     const [idStatusUser, setIdStatusUser] = useState(0)
     const [editMode, setEditMode] = useState(false);
+    const [assignMode, setAssignMode] = useState(false)
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const [selectedStatusUser, setSelectedStatusUser] = useState(null);
     const [selectedUserId, setSelectedUserId] = useState(0);
+
+
+    const account = JSON.parse(localStorage.getItem("myAccount")).data
 
     useEffect(() => {
 
@@ -62,56 +67,6 @@ export default function Users() {
     }, [])
 
 
-    const activateStatusButtonCell = (params) => {
-        return (
-            <Button variant="contained" onClick={() => {
-                Axios.get("http://localhost:8085/user/" + params.row.id).then((response) => {
-                    if (response.data.activeAccount) {
-                        Axios.put("http://localhost:8085/user/deactivate/" + params.row.id)
-                    } else {
-                        Axios.put("http://localhost:8085/user/activate/" + params.row.id)
-                    }
-                })
-                window.location.reload(false)
-            }}>Change active status</Button>
-        );
-    }
-    const editButtonCell = (params) => {
-        return (
-            <Button
-                onClick={() => {
-                    setSelectedUserId(params.row.id)
-                    setEditMode(true);
-                    Axios.get("http://localhost:8085/user/" + params.row.id).then((response) => {
-                        setEmail(response.data.email)
-                        setIdDepartment(response.data.idDepartment)
-                        setIdStatusUser(response.data.idStatusUser)
-                        setSelectedDepartment(departments[response.data.idDepartment - 1])
-                        setSelectedStatusUser(statusUsers[response.data.idStatus - 1])
-                    })
-                    setOpen(true);
-                }}
-                sx={{marginLeft: 1, backgroundColor: 'transparent', color: 'black', padding: '6px'}}
-                startIcon={<ModeEditIcon/>}> </Button>
-        )
-    }
-
-    const deleteButtonCell = (params) => {
-        return (
-            <Button variant="containted" startIcon={<DeleteIcon/>} onClick={() => {
-                setSelectedUserId(params.row.id);
-                setOpenConfirmation(true);
-            }} sx={{color: 'red'}}></Button>
-        )
-    }
-
-    const columnsWithButton = [
-        ...columns.map((column) => ({field: column, width: 160})),
-        {field: " ", renderCell: activateStatusButtonCell, width: 270},
-        {field: "  ", renderCell: editButtonCell},
-        {field: "   ", renderCell: deleteButtonCell}
-    ];
-
     // MODAL
     const [open, setOpen] = useState(false);
     const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -122,6 +77,7 @@ export default function Users() {
 
     const openAddModal = () => {
         setEditMode(false);
+        setAssignMode(false);
         setOpen(true);
 
         //reset to default values
@@ -263,22 +219,32 @@ export default function Users() {
             }
         }
 
-        if (password.length > 0) {
+        if (assignMode) {
             Axios.put("http://localhost:8085/user/" + selectedUserId, {
-                email: email,
-                password: password,
                 idDepartment: idDepartment,
-                idStatus: idStatusUser
             })
             window.location.reload(false);
         } else {
-            Axios.put("http://localhost:8085/user/" + selectedUserId, {
-                email: email,
-                idDepartment: idDepartment,
-                idStatus: idStatusUser
-            })
-            window.location.reload(false);
+
+            if (password.length > 0) {
+                Axios.put("http://localhost:8085/user/" + selectedUserId, {
+                    email: email,
+                    password: password,
+                    idDepartment: idDepartment,
+                    idStatus: idStatusUser
+                })
+                window.location.reload(false);
+            } else {
+                Axios.put("http://localhost:8085/user/" + selectedUserId, {
+                    email: email,
+                    idDepartment: idDepartment,
+                    idStatus: idStatusUser
+                })
+                window.location.reload(false);
+            }
         }
+
+
     }
 
     const deleteUser = () => {
@@ -286,6 +252,79 @@ export default function Users() {
         window.location.reload(false);
         setOpenConfirmation(false);
     }
+
+    const activateStatusButtonCell = (params) => {
+        return (
+            <Button variant="contained" onClick={() => {
+                Axios.get("http://localhost:8085/user/" + params.row.id).then((response) => {
+                    if (response.data.activeAccount) {
+                        Axios.put("http://localhost:8085/user/deactivate/" + params.row.id)
+                    } else {
+                        Axios.put("http://localhost:8085/user/activate/" + params.row.id)
+                    }
+                })
+                window.location.reload(false)
+            }}>Change active status</Button>
+        );
+    }
+    const editButtonCell = (params) => {
+        return (
+            <Button
+                onClick={() => {
+                    setSelectedUserId(params.row.id)
+                    setEditMode(true);
+                    Axios.get("http://localhost:8085/user/" + params.row.id).then((response) => {
+                        setEmail(response.data.email)
+                        setIdDepartment(response.data.idDepartment)
+                        setIdStatusUser(response.data.idStatusUser)
+                        setSelectedDepartment(departments[response.data.idDepartment - 1])
+                        setSelectedStatusUser(statusUsers[response.data.idStatus - 1])
+                    })
+                    setOpen(true);
+
+                }}
+                sx={{marginLeft: 1, backgroundColor: 'transparent', color: 'black', padding: '6px'}}
+                startIcon={<ModeEditIcon/>}> </Button>
+        )
+    }
+    const deleteButtonCell = (params) => {
+        return (
+            <Button variant="containted" startIcon={<DeleteIcon/>} onClick={() => {
+                setSelectedUserId(params.row.id);
+                setOpenConfirmation(true);
+            }} sx={{color: 'red'}}></Button>
+        )
+    }
+
+    const assignButtonCell = (params) => {
+        return (
+            <Button variant="containted" startIcon={<AddIcon/>} onClick={() => {
+                setSelectedUserId(params.row.id);
+                setAssignMode(true)
+                Axios.get("http://localhost:8085/user/" + params.row.id).then((response) => {
+                    setEmail(response.data.email)
+                    setIdDepartment(response.data.idDepartment)
+                    setIdStatusUser(response.data.idStatusUser)
+                    setSelectedDepartment(departments[response.data.idDepartment - 1])
+                    setSelectedStatusUser(statusUsers[response.data.idStatus - 1])
+                })
+                setEditMode(true);
+                setOpen(true);
+            }} sx={{color: 'red'}}></Button>
+        )
+    }
+
+    const columnsAssign = [
+        ...columns.map((column) => ({field: column, width: 160})),
+        {field: "  ", renderCell: assignButtonCell},
+    ]
+
+    const columnsWithButton = [
+        ...columns.map((column) => ({field: column, width: 160})),
+        {field: " ", renderCell: activateStatusButtonCell, width: 270},
+        {field: "  ", renderCell: editButtonCell},
+        {field: "   ", renderCell: deleteButtonCell}
+    ];
 
     return (
         <>
@@ -296,11 +335,13 @@ export default function Users() {
             </div>
             <div className="mytasks_container_dataGrid">
                 <div className="mytasks_dataGrid">
-                    {columns.length > 0 ?
+                    {columns.length > 0 && account.idStatus === 3 ?
 
                         <DataGrid columns={columnsWithButton} rows={users}
                                   columnVisibilityModel={{password: false}} slots={{toolbar: GridToolbar}}/>
-                        : <></>}
+
+                        : <DataGrid columns={columnsAssign} rows={users}
+                                    columnVisibilityModel={{password: false}} slots={{toolbar: GridToolbar}}/>}
 
                 </div>
             </div>
@@ -334,7 +375,7 @@ export default function Users() {
                 <Box sx={style}>
                     {editMode ? <h3>Edit User</h3> : <h3>Add User</h3>}
 
-                    <TextField
+                    {assignMode === true ? <TextField
                         id="email"
                         value={email}
                         onChange={(e) => {
@@ -342,8 +383,19 @@ export default function Users() {
                         }}
                         label="Email"
                         variant="outlined"
-                    />
-                    <TextField
+                        disabled
+                    /> : <TextField
+                        id="email"
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                        }}
+                        label="Email"
+                        variant="outlined"
+
+                    />}
+
+                    {assignMode === true ? <TextField
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -352,7 +404,18 @@ export default function Users() {
                         label="Password"
                         type="password"
                         autoComplete="current-password"
-                    />
+                        disabled
+                    /> : <TextField
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                        id="outlined-password-input"
+                        label="Password"
+                        type="password"
+                        autoComplete="current-password"
+                    />}
+
 
                     {departments.length > 0 ?
                         <Autocomplete
@@ -370,7 +433,8 @@ export default function Users() {
                         />
                         : <></>}
 
-                    {statusUsers.length > 0 ?
+
+                    {assignMode === true ?
                         <Autocomplete
                             disablePortal
                             id="combo-box-statusUsers"
@@ -382,9 +446,23 @@ export default function Users() {
                                 setIdStatusUser(value.id)
                                 setSelectedStatusUser(value)
                             }}
+                            disabled
                             renderInput={(params) => <TextField {...params} label="Status User"/>}
                         />
-                        : <></>}
+                        : <Autocomplete
+                            disablePortal
+                            id="combo-box-statusUsers"
+                            options={statusUsers}
+                            getOptionLabel={(option) => option.name || ""}
+                            sx={{width: 300}}
+                            value={selectedStatusUser}
+                            onChange={(event, value) => {
+                                setIdStatusUser(value.id)
+                                setSelectedStatusUser(value)
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Status User"/>}
+                        />}
+
                     {editMode ? <Button variant="contained" onClick={editUser}>Edit</Button> :
                         <Button variant="contained" onClick={addUser}>Add</Button>}
                 </Box>
