@@ -8,6 +8,11 @@ const ProjectDb = require("../models").Project;
 const CommentDb = require("../models").Comment;
 const bcrypt = require('bcrypt')
 
+
+const multer = require('multer')
+const path = require('path')
+
+
 const controller = {
     resetDB: async (req, res) => {
         connection
@@ -272,6 +277,7 @@ const controller = {
                     .send({message: "Database reset failed!", err: err.message});
             });
     },
+
 };
 
 module.exports = controller;
