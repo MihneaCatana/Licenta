@@ -3,17 +3,31 @@
     align-items: center;
     height: 95vh;
     flex-direction: column;
+
 }
 
 .profile_card {
-    height: 550px;
+    min-height: 600px;
     width: 450px;
     display: flex;
     align-items: center;
     flex-direction: column;
+    background-color: aliceblue;
     box-shadow: 1px 1px 15px 8px rgba(161, 161, 161, 0.35);
     border-radius: 10px;
     justify-content: space-between;
+}
+
+.profile_card p {
+    color: black;
+}
+
+@media screen and (max-width: 768px) {
+
+    .profile_card {
+        width: 90%;
+        min-height: 80%;
+    }
 }
 
 .profile_card_details {
@@ -42,3 +56,54 @@
     width: auto;
     margin-bottom: 1rem;
 }
+
+.light_mode_themes {
+    display: flex;
+}
+
+.light_mode_themes div {
+
+    margin: 1rem 0.5rem;
+    height: 25px;
+    width: 25px;
+    /*border: 1px solid black;*/
+    border-radius: 50%;
+}
+
+.light_mode_themes div:hover {
+    transition: 0.3s;
+    transform: scale(110%);
+    cursor: pointer;
+}
+
+.orange_light_theme {
+    background-color: rgba(245, 166, 35, 1);
+
+}
+
+.purple_light_theme {
+    background-color: rgba(102, 13, 179, 1);
+}
+
+.green_light_theme {
+    background-color: #009142;
+}
+
+.blue_light_theme {
+    background-color: #2771ee;
+}
+
+.dark_blue_light_theme {
+    background-color: rgba(38, 102, 215, 0.90);
+}
+
+.title_dark_mode {
+    text-align: center;
+}
+
+.dark_mode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

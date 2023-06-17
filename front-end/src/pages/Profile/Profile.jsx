@@ -1,8 +1,12 @@
 //HOOKS
-import {useEffect, useState} from "react"
+import {useEffect, useState, useRef, useContext} from "react"
 
 // USER MADE COMPONENTS
 import Appbar from "../../components/Appbar/Appbar"
+
+// MATERIAL UI
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import IconButton from '@mui/material/IconButton';
 
 // AXIOS
 import Axios from "axios";
@@ -14,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 //CSS
 import "./Profile.css"
 import Button from "@mui/material/Button";
+import {ContextTheme} from "../../App";
 
 
 export default function Profile() {
@@ -22,17 +27,19 @@ export default function Profile() {
     const [statusUser, setStatusUser] = useState("");
     const [email, setEmail] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
-    const [imageURL, setImageURL] = useState(null);
-    const [imagineSrc, setImagineSrc] = useState();
-    const [validImage, setValidImage] = useState(false);
+    const [validPath, setValidPath] = useState(false);
+    const [activeImage, setActiveImage] = useState(false)
+
+    const [themeDetails, setThemeDetails] = useContext(ContextTheme);
+
+    let ProfilePicComponent = useRef(null);
 
 
     useEffect(() => {
 
         const account = JSON.parse(localStorage.getItem("myAccount"))
         setEmail(account.data.email);
-        setImageURL(`../../assets/${account.data.email.split("@")[0]}.jpg`)
-        setImagineSrc(require(`../../assets/${account.data.email.split("@")[0]}.jpg`))
+        checkFilePath(`../../assets/${account.data.email.split("@")[0]}.jpg`)
 
 
         Axios.get("http://localhost:8085/department/" + account.data.idDepartment).then((response) => {
@@ -43,6 +50,45 @@ export default function Profile() {
         })
 
     }, [])
+
+    useEffect(() => {
+        const account = JSON.parse(localStorage.getItem("myAccount"))
+
+        async function setPhoto() {
+            if (validPath) {
+
+                await import(`../../assets/${account.data.email.split("@")[0]}.jpg`).then(
+                    (module) => {
+                        ProfilePicComponent.current = module.default;
+                        setActiveImage(true);
+                    }
+                ).catch((err) => {
+                    console.log(err)
+                });
+
+            } else {
+                import("../../assets/employee.png").then((module) => {
+                    ProfilePicComponent.current = module.default;
+                });
+            }
+        }
+
+        setPhoto();
+    }, [validPath]);
+
+
+    function checkFilePath(url) {
+        var request = new XMLHttpRequest();
+        request.open("GET", url, false);
+        request.send();
+
+        if (request.status === 200) {
+            setValidPath(true);
+        } else {
+            setValidPath(false);
+        }
+
+    }
 
 
     const insertImage = async () => {
@@ -74,6 +120,72 @@ export default function Profile() {
         }
     }
 
+    const setBlueTheme = () => {
+        const palette = {
+            "palette": {
+                "primary": {
+                    "main": "#2771ee",
+                    "contrastText": "#fff"
+                },
+            }
+        }
+
+        setThemeDetails(palette)
+        localStorage.setItem("theme", JSON.stringify(palette))
+    }
+
+    const setOrangeTheme = () => {
+        const palette = {
+            "palette": {
+                "primary": {
+                    "main": "rgba(245, 166, 35, 1)",
+                    "contrastText": "#fff"
+                },
+            }
+        }
+        setThemeDetails(palette)
+        localStorage.setItem("theme", JSON.stringify(palette))
+    }
+
+    const setGreenTheme = () => {
+        const palette = {
+            "palette": {
+                "primary": {
+                    "main": "#009142",
+                    "contrastText": "#fff"
+                },
+            }
+        }
+
+        setThemeDetails(palette)
+        localStorage.setItem("theme", JSON.stringify(palette))
+    }
+
+    const setPurpleTheme = () => {
+        const palette = {
+            "palette": {
+                "primary": {
+                    "main": "rgba(102, 13, 179, 1)",
+                    "contrastText": "#fff"
+                },
+            }
+        }
+
+        setThemeDetails(palette)
+        localStorage.setItem("theme", JSON.stringify(palette))
+    }
+
+    const setDarkBlueTheme = () => {
+        setThemeDetails({
+            "palette": {
+                "primary": {
+                    "main": "rgba(38,102,215,0.90)",
+                    "contrastText": "#fff"
+                },
+                "mode": "dark"
+            }
+        })
+    }
 
     return (
         <>
@@ -86,29 +198,50 @@ export default function Profile() {
                 <div className="profile_card">
                     <div className="profile_card_details">
 
-                        {validImage && imagineSrc ?
-                            <>
+                        <div className="circle_profile_photo">
+                            {activeImage ?
+
                                 <img
-                                    src={imagineSrc}
+                                    src={ProfilePicComponent.current}
+                                    style={{
+                                        height: 170,
+                                        width: 170,
+                                        marginTop: 20,
+                                        borderRadius: 100,
+                                        objectFit: "contain",
+                                        border: "1px solid black"
+                                    }}
+                                    alt="ProfilePicture"
+
+                                /> : <img
+                                    src={require("../../assets/employee.png")}
                                     style={{height: 174, marginTop: 20, borderRadius: 95}}
                                     alt="ProfilePicture"
-                                    onError={() => {
-                                        setValidImage(false)
-                                    }}
                                 />
-                            </>
 
-                            : <img
-                                src={require("../../assets/employee.png")}
-                                style={{height: 74, marginTop: 20}}
-                                alt="PictureDefault"
-                            />}
-
+                            }
+                        </div>
 
                         <div className="account_details">
                             <p><b>Email:</b> {email}</p>
                             <p><b>Department:</b> {department}</p>
                             <p><b>Status:</b> {statusUser}</p>
+                        </div>
+                    </div>
+                    <div className="color_mode">
+                        <p> Light Mode Themes </p>
+                        <div className="light_mode_themes">
+                            <div className="orange_light_theme" onClick={setOrangeTheme}/>
+                            <div className="blue_light_theme" onClick={setBlueTheme}/>
+                            <div className="green_light_theme" onClick={setGreenTheme}/>
+                            <div className="purple_light_theme" onClick={setPurpleTheme}/>
+                        </div>
+                        <p className="title_dark_mode"> Dark Mode</p>
+                        <div className="dark_mode">
+                            {/*<div className="dark_blue_light_theme" onClick={setDarkBlueTheme}/>*/}
+                            <IconButton onClick={setDarkBlueTheme} color="inherit">
+                                <Brightness4Icon/>
+                            </IconButton>
                         </div>
                     </div>
                     <div className="image_changer_container">

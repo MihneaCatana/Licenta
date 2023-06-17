@@ -6,14 +6,12 @@ const othersController = require("../controller").others;
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, '../front-end/src/assets/profile_pictures')
+        callback(null, '../front-end/src/assets/')
     },
 
     filename: (req, file, callback) => {
-        const fileExtension = path.extname(file.originalname);
 
-        // callback(null, req.body.fileName + fileExtension)
-        callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+        callback(null, file.originalname)
     }
 
 })
