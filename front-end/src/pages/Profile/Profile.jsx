@@ -22,11 +22,18 @@ export default function Profile() {
     const [statusUser, setStatusUser] = useState("");
     const [email, setEmail] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
+    const [imageURL, setImageURL] = useState(null);
+    const [imagineSrc, setImagineSrc] = useState();
+    const [validImage, setValidImage] = useState(false);
+
 
     useEffect(() => {
 
         const account = JSON.parse(localStorage.getItem("myAccount"))
         setEmail(account.data.email);
+        setImageURL(`../../assets/${account.data.email.split("@")[0]}.jpg`)
+        setImagineSrc(require(`../../assets/${account.data.email.split("@")[0]}.jpg`))
+
 
         Axios.get("http://localhost:8085/department/" + account.data.idDepartment).then((response) => {
             setDepartment(response.data.name)
@@ -37,13 +44,13 @@ export default function Profile() {
 
     }, [])
 
+
     const insertImage = async () => {
 
         if (selectedImage) {
             const formData = new FormData();
 
-            formData.append('image', selectedImage);
-            formData.append('fileName', email.split('@')[0])
+            formData.append('image', selectedImage, email.split('@')[0] + ".jpg");
 
             await Axios.post("http://localhost:8085/other/uploadImage",
                 formData
@@ -78,8 +85,26 @@ export default function Profile() {
                 </div>
                 <div className="profile_card">
                     <div className="profile_card_details">
-                        <img src={require(`../../assets/employee.png`)} style={{height: 74, marginTop: 20}}
-                             alt="ProfilePicture"/>
+
+                        {validImage && imagineSrc ?
+                            <>
+                                <img
+                                    src={imagineSrc}
+                                    style={{height: 174, marginTop: 20, borderRadius: 95}}
+                                    alt="ProfilePicture"
+                                    onError={() => {
+                                        setValidImage(false)
+                                    }}
+                                />
+                            </>
+
+                            : <img
+                                src={require("../../assets/employee.png")}
+                                style={{height: 74, marginTop: 20}}
+                                alt="PictureDefault"
+                            />}
+
+
                         <div className="account_details">
                             <p><b>Email:</b> {email}</p>
                             <p><b>Department:</b> {department}</p>

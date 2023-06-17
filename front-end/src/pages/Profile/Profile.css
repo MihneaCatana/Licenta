@@ -6,8 +6,8 @@
 }
 
 .profile_card {
-    height: 450px;
-    width: 350px;
+    height: 550px;
+    width: 450px;
     display: flex;
     align-items: center;
     flex-direction: column;
