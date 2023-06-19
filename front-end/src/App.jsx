@@ -52,9 +52,9 @@ function App() {
     useEffect(() => {
 
         if (themeLocalStorage)
-            setThemeDetails(themeLocalStorage)
+            setThemeDetails(JSON.parse(themeLocalStorage))
 
-        console.log("TESTED")
+        console.log()
     }, []);
 
 

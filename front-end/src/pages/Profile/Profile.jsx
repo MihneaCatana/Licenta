@@ -6,6 +6,7 @@ import Appbar from "../../components/Appbar/Appbar"
 
 // MATERIAL UI
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness4';
 import IconButton from '@mui/material/IconButton';
 
 // AXIOS
@@ -31,6 +32,7 @@ export default function Profile() {
     const [activeImage, setActiveImage] = useState(false)
 
     const [themeDetails, setThemeDetails] = useContext(ContextTheme);
+    const [darkMode, setDarkMode] = useState(false)
 
     let ProfilePicComponent = useRef(null);
 
@@ -38,6 +40,10 @@ export default function Profile() {
     useEffect(() => {
 
         const account = JSON.parse(localStorage.getItem("myAccount"))
+
+        if (localStorage.getItem("darkMode"))
+            setDarkMode(localStorage.getItem("darkMode"))
+
         setEmail(account.data.email);
         checkFilePath(`../../assets/${account.data.email.split("@")[0]}.jpg`)
 
@@ -48,6 +54,7 @@ export default function Profile() {
         Axios.get("http://localhost:8085/statusUser/" + account.data.idStatus).then((response) => {
             setStatusUser(response.data.name)
         })
+
 
     }, [])
 
@@ -132,6 +139,7 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
+        localStorage.setItem("darkMode", false)
     }
 
     const setOrangeTheme = () => {
@@ -145,6 +153,7 @@ export default function Profile() {
         }
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
+        localStorage.setItem("darkMode", false)
     }
 
     const setGreenTheme = () => {
@@ -159,6 +168,7 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
+        localStorage.setItem("darkMode", false)
     }
 
     const setPurpleTheme = () => {
@@ -173,10 +183,12 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
+        localStorage.setItem("darkMode", false)
+        setDarkMode(false)
     }
 
     const setDarkBlueTheme = () => {
-        setThemeDetails({
+        const palette = {
             "palette": {
                 "primary": {
                     "main": "rgba(38,102,215,0.90)",
@@ -184,7 +196,13 @@ export default function Profile() {
                 },
                 "mode": "dark"
             }
-        })
+        }
+
+        setThemeDetails(palette)
+        localStorage.setItem("theme", JSON.stringify(palette))
+        localStorage.setItem("darkMode", true)
+        setDarkMode(true)
+
     }
 
     return (
@@ -238,10 +256,18 @@ export default function Profile() {
                         </div>
                         <p className="title_dark_mode"> Dark Mode</p>
                         <div className="dark_mode">
-                            {/*<div className="dark_blue_light_theme" onClick={setDarkBlueTheme}/>*/}
-                            <IconButton onClick={setDarkBlueTheme} color="inherit">
-                                <Brightness4Icon/>
-                            </IconButton>
+
+
+                            {darkMode ?
+
+                                <IconButton sx={{backgroundColor: "wheat"}} onClick={setDarkBlueTheme}>
+                                    <Brightness4Icon/>
+                                </IconButton> :
+
+                                <IconButton sx={{backgroundColor: "red"}} onClick={setDarkBlueTheme}>
+                                    <Brightness7Icon/>
+                                </IconButton>}
+
                         </div>
                     </div>
                     <div className="image_changer_container">
