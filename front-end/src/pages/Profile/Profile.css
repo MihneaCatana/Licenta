@@ -38,6 +38,15 @@
     align-items: center;
 }
 
+.profile_photo {
+    height: 170px;
+    width: 170px;
+    margin-top: 20px;
+    border-radius: 100%;
+    object-fit: contain;
+    border: 1px solid black;
+}
+
 .account_details {
     margin-top: 25px;
 }

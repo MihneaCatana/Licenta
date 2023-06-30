@@ -10,6 +10,8 @@ router.get("/", userController.getAllUsers);
 
 router.get("/:id", userController.getUserById);
 
+router.get("/email/:email", userController.getUserByEmail);
+
 router.put("/:id", userController.updateUserById);
 
 router.put("/activate/:id", userController.activateUserById);

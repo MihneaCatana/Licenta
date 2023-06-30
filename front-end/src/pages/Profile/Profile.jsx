@@ -1,12 +1,11 @@
 //HOOKS
-import {useEffect, useState, useRef, useContext} from "react"
+import {useEffect, useState, useContext} from "react"
 
 // USER MADE COMPONENTS
 import Appbar from "../../components/Appbar/Appbar"
 
 // MATERIAL UI
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness4';
 import IconButton from '@mui/material/IconButton';
 
 // AXIOS
@@ -20,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./Profile.css"
 import Button from "@mui/material/Button";
 import {ContextTheme} from "../../App";
+import useLocalPhoto from "../../hooks/useLocalPhoto";
 
 
 export default function Profile() {
@@ -28,26 +28,15 @@ export default function Profile() {
     const [statusUser, setStatusUser] = useState("");
     const [email, setEmail] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
-    const [validPath, setValidPath] = useState(false);
-    const [activeImage, setActiveImage] = useState(false)
-
     const [themeDetails, setThemeDetails] = useContext(ContextTheme);
-    const [darkMode, setDarkMode] = useState(false)
 
-    let ProfilePicComponent = useRef(null);
+    const profilePic = useLocalPhoto(email.split("@")[0])
 
 
     useEffect(() => {
 
         const account = JSON.parse(localStorage.getItem("myAccount"))
-
-        if (localStorage.getItem("darkMode"))
-            setDarkMode(localStorage.getItem("darkMode"))
-
         setEmail(account.data.email);
-        checkFilePath(`../../assets/${account.data.email.split("@")[0]}.jpg`)
-
-
         Axios.get("http://localhost:8085/department/" + account.data.idDepartment).then((response) => {
             setDepartment(response.data.name)
         })
@@ -55,48 +44,7 @@ export default function Profile() {
             setStatusUser(response.data.name)
         })
 
-
     }, [])
-
-    useEffect(() => {
-        const account = JSON.parse(localStorage.getItem("myAccount"))
-
-        async function setPhoto() {
-            if (validPath) {
-
-                await import(`../../assets/${account.data.email.split("@")[0]}.jpg`).then(
-                    (module) => {
-                        ProfilePicComponent.current = module.default;
-                        setActiveImage(true);
-                    }
-                ).catch((err) => {
-                    console.log(err)
-                });
-
-            } else {
-                import("../../assets/employee.png").then((module) => {
-                    ProfilePicComponent.current = module.default;
-                });
-            }
-        }
-
-        setPhoto();
-    }, [validPath]);
-
-
-    function checkFilePath(url) {
-        var request = new XMLHttpRequest();
-        request.open("GET", url, false);
-        request.send();
-
-        if (request.status === 200) {
-            setValidPath(true);
-        } else {
-            setValidPath(false);
-        }
-
-    }
-
 
     const insertImage = async () => {
 
@@ -139,7 +87,6 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
-        localStorage.setItem("darkMode", false)
     }
 
     const setOrangeTheme = () => {
@@ -153,7 +100,6 @@ export default function Profile() {
         }
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
-        localStorage.setItem("darkMode", false)
     }
 
     const setGreenTheme = () => {
@@ -168,7 +114,6 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
-        localStorage.setItem("darkMode", false)
     }
 
     const setPurpleTheme = () => {
@@ -183,8 +128,6 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
-        localStorage.setItem("darkMode", false)
-        setDarkMode(false)
     }
 
     const setDarkBlueTheme = () => {
@@ -200,9 +143,6 @@ export default function Profile() {
 
         setThemeDetails(palette)
         localStorage.setItem("theme", JSON.stringify(palette))
-        localStorage.setItem("darkMode", true)
-        setDarkMode(true)
-
     }
 
     return (
@@ -217,27 +157,11 @@ export default function Profile() {
                     <div className="profile_card_details">
 
                         <div className="circle_profile_photo">
-                            {activeImage ?
-
-                                <img
-                                    src={ProfilePicComponent.current}
-                                    style={{
-                                        height: 170,
-                                        width: 170,
-                                        marginTop: 20,
-                                        borderRadius: 100,
-                                        objectFit: "contain",
-                                        border: "1px solid black"
-                                    }}
-                                    alt="ProfilePicture"
-
-                                /> : <img
-                                    src={require("../../assets/employee.png")}
-                                    style={{height: 174, marginTop: 20, borderRadius: 95}}
-                                    alt="ProfilePicture"
-                                />
-
-                            }
+                            <img
+                                src={profilePic}
+                                className="profile_photo"
+                                alt="ProfilePicture"
+                            />
                         </div>
 
                         <div className="account_details">
@@ -257,16 +181,10 @@ export default function Profile() {
                         <p className="title_dark_mode"> Dark Mode</p>
                         <div className="dark_mode">
 
+                            <IconButton sx={{backgroundColor: "wheat"}} onClick={setDarkBlueTheme}>
+                                <Brightness4Icon/>
+                            </IconButton>
 
-                            {darkMode ?
-
-                                <IconButton sx={{backgroundColor: "wheat"}} onClick={setDarkBlueTheme}>
-                                    <Brightness4Icon/>
-                                </IconButton> :
-
-                                <IconButton sx={{backgroundColor: "red"}} onClick={setDarkBlueTheme}>
-                                    <Brightness7Icon/>
-                                </IconButton>}
 
                         </div>
                     </div>

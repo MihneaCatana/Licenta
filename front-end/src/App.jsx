@@ -17,6 +17,7 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import {createContext, useEffect, useState} from "react";
 import {CssBaseline} from "@mui/material";
+import {UserProfile} from "./pages/UserProfile";
 
 
 export const ContextTheme = createContext();
@@ -55,7 +56,7 @@ function App() {
             setThemeDetails(JSON.parse(themeLocalStorage))
 
         console.log()
-    }, []);
+    }, [themeLocalStorage]);
 
 
     const theme = createTheme(themeDetails)
@@ -87,6 +88,10 @@ function App() {
                             <Route path="/users" element={<PrivateRoute path="/login"/>}>
                                 <Route path="/users" element={<Users/>}/>
                             </Route>
+                            <Route path="/users/:email" element={<PrivateRoute path="/login"/>}>
+                                <Route path="/users/:email" element={<UserProfile email={useParams()}/>}/>
+                            </Route>
+
                             <Route path="/departments" element={<PrivateRoute path="/login"/>}>
                                 <Route path="/departments" element={<Departments/>}/>
                             </Route>

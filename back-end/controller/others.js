@@ -236,6 +236,23 @@ const controller = {
                     deadline: new Date("2023-06-15T19:00"),
                 });
 
+                TaskDb.create({
+                    name: "Implement Payment Method through Credit Card",
+                    description: "Let the user select the Card option when he proceds to checkout",
+                    idStatusTask: 2,
+                    idUser: 4,
+                    idProject: 1,
+                    deadline: new Date("2023-06-15T19:00"),
+                });
+
+                TaskDb.create({
+                    name: "Create account for interns",
+                    description: "Create accounts for interns and give them acces",
+                    idStatusTask: 1,
+                    idProject: 1,
+                    deadline: new Date("2023-07-15T19:00"),
+                });
+
                 // COMMENT
 
                 CommentDb.create({

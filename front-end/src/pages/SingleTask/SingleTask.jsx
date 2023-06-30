@@ -27,7 +27,7 @@ import Axios from "axios"
 import "./Singletask.css"
 
 
-export default function SingleTask(callbackfn, thisArg) {
+export default function SingleTask() {
 
     const {taskId} = useParams();
 
@@ -132,9 +132,10 @@ export default function SingleTask(callbackfn, thisArg) {
                 <div className="task_card">
                     {task ?
                         <>
-                            <p className="task_title"> {task.name}</p>
+                            <p className="task_title_name"> {task.name}</p>
                             <div className="task_details">
-                                <p><b>Description: <br/></b> {task.description} </p>
+
+                                <p className="task_description"><b>Description: <br/></b> {task.description} </p>
                                 <p>
                                     <b>Deadline:</b> {(date.toLocaleDateString("en-US") + " " + date.toLocaleTimeString())}
                                 </p>
