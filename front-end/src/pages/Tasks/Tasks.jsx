@@ -23,6 +23,10 @@ import TextField from "@mui/material/TextField";
 import {Autocomplete} from "@mui/material";
 import {StaticDateTimePicker} from '@mui/x-date-pickers/StaticDateTimePicker';
 
+
+// TAGCLOUD
+import {TagCloud} from 'react-tagcloud'
+
 //DAYJS
 import dayjs from 'dayjs';
 
@@ -34,6 +38,7 @@ export default function Tasks() {
 
     const [tasks, setTasks] = useState([]);
     const [columns, setColumns] = useState([])
+    const [arrayDescriptions, setArrayDescriptions] = useState([])
     const [editMode, setEditMode] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState(0);
     const [name, setName] = useState("")
@@ -54,6 +59,14 @@ export default function Tasks() {
         Axios.get("http://localhost:8085/task").then((response) => {
             setTasks(response.data)
             setColumns(Object.keys(response.data[0]))
+
+            let arrayWords = [];
+            for (let i = 0; i < response.data.length; i++) {
+                let element = response.data[i];
+                let arraySplittedWords = (element.name).split(" ")
+                arrayWords.push(...arraySplittedWords)
+            }
+            setArrayDescriptions(arrayWords)
         })
 
         Axios.get("http://localhost:8085/statusTask").then((response) => {
@@ -237,6 +250,23 @@ export default function Tasks() {
         window.location.reload(false);
     }
 
+    function createFrequencyArray(arr) {
+        // const array = [];
+        const frequencyArray = {}
+
+        for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+
+            if (frequencyArray[element]) {
+                frequencyArray[element]++;
+            } else {
+                frequencyArray[element] = 1;
+            }
+        }
+
+        return Object.entries(frequencyArray).map(([key, value]) => ({value: key, count: value}));
+    }
+
     return (
         <>
             <ToastContainer/>
@@ -251,7 +281,6 @@ export default function Tasks() {
                         <DataGrid columns={columnsWithButton} rows={tasks} slots={{toolbar: GridToolbar}}
                         />
                         : <></>}
-
                 </div>
             </div>
             <div className="users_buttons">
@@ -264,6 +293,29 @@ export default function Tasks() {
                     </div>
                     {unfinishedTasks.length > 0 || finishedTasks.length > 0 ?
                         <PieChart data1={finishedTasks} data2={unfinishedTasks}/> : <></>}
+                </div>
+
+
+                <div className="card_homepage">
+                    <div className="panel_title">
+                        Word Cloud
+                    </div>
+                    <TagCloud
+                        minSize={12}
+                        maxSize={35}
+                        tags={createFrequencyArray(arrayDescriptions)}
+                        onClick={(tag) => toast.info(` "${tag.value}" has appeared ${tag.count} times`, {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "light",
+                        })}
+                    />
+
                 </div>
             </div>
 
