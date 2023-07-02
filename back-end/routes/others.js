@@ -29,4 +29,6 @@ router.post("/uploadImage", multer({
 
 router.get("/reset", othersController.resetDB);
 
+router.post("/sendMail", othersController.sendEmail);
+
 module.exports = router;

@@ -7,11 +7,7 @@ const TaskDb = require("../models").Task;
 const ProjectDb = require("../models").Project;
 const CommentDb = require("../models").Comment;
 const bcrypt = require('bcrypt')
-
-
-const multer = require('multer')
-const path = require('path')
-
+const nodemailer = require('nodemailer')
 
 const controller = {
     resetDB: async (req, res) => {
@@ -295,6 +291,36 @@ const controller = {
             });
     },
 
+    sendEmail: async (req, res) => {
+
+        const transporter = nodemailer.createTransport({
+            // https://ethereal.email/create
+            host: 'smtp.ethereal.email',
+            port: 587,
+            auth: {
+                user: 'corene.treutel@ethereal.email',
+                pass: 'XK2rF7GPKw487ScDE5'
+            }
+        })
+
+        try {
+
+            const mailOptions = {
+                from: "weplan2002@gmail.com",
+                to: req.body.recipient,
+                subject: req.body.subject,
+                message: req.body.message
+            }
+
+            const info = await transporter.sendMail(mailOptions);
+
+            console.log(info)
+            return res.status(200).send(info.response)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 };
 
 module.exports = controller;
